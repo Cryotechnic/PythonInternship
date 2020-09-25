@@ -25,9 +25,9 @@ word4 = "Goodbye World! " + word + word2
 print(word4)
 
 # Removing from string (deleting characters) FIXME: Does not work!
-word5 = word4
-if word5.endswith('World'):
-    print(word5.replace('World', ''))
-
+word5 = "Goodbye World!"
+word6 = ""
+if word5.find("Goodbye"):
+   word5.replace(" ") 
 print(word5)
 
