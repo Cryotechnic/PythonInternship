@@ -19,5 +19,5 @@ def main():
     print("Executing String function...")
     stringFunc()
     time.sleep(2)
-    print("If you've gotten this far without any errors, it means it worked! Congrats!")
+    print("If you've gotten this far without any errors")
 main()
