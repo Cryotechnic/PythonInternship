@@ -23,7 +23,7 @@ print("Subtracting both matrices: \n")
 
 # Executing matrix math
 print (numpy.divide(list1,list2))
-print ("Multiplication of two matri ces: ")
+print ("Multiplication of two matri ces: ") # a * inverse b
 print (numpy.multiply(list1,list2))
 print ("The product of two matrices: ")
 print (numpy.dot(list1,list2))
@@ -35,6 +35,7 @@ print (numpy.sum(list2))
 # Using "T" to transpose the matrix
 print ("Matrix transposition: ")
 print (list1.T)
+print(list2.T)
 
 # List appending 
 print("Initial list: ", list3)

@@ -16,8 +16,8 @@ x = [80, 70, 65, 60, 50, 40, 45, 40, 35, 7, 0, -1, -122, -23, -5] # Random numbe
 for y in x:
     if y >= 50:
         print("Good")
-    elif y <= 50 and y >= 0:
-        print("Value lower than 50")
+    elif y <= 0:
+        print("Value lower than 0")
     else:
         print("Bad")
 
