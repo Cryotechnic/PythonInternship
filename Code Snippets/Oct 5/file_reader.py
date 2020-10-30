@@ -10,8 +10,10 @@ import pandas as pd
 
 # Reading file and printing first 100 rows
 file = pd.read_csv("titanic.csv")
-print(file.head(100))
+#print(file.head(100))
 
 # Converting to dictionary
-file.to_dict()
-print(file)
+dict1 = file.to_dict()
+print(dict1)
+
+# Selecting between range
