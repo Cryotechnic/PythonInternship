@@ -36,8 +36,8 @@ for image in img_list_rock:
         data = asarray(rgb_img)
         print(type(data))
         print(data.shape)
+        print(data)
     except Exception as e:
         break
 
 # Creating numpy array
-print(data)
