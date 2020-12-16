@@ -78,9 +78,3 @@ for image in img_list_scissors:
         break
 
 
-
-# Lists all files of .jpg extension
-#print(img_list_rock)
-# jpg_files_rock = read_all_images(training_path_rock, 'jpg')
-# jpg_files_paper = read_all_images(training_path_paper, 'jpg')
-# jpg_files_scissors = read_all_images(training_path_scissors, 'jpg')
