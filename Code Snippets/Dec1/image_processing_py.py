@@ -6,9 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import matplotlib.image as mpimg
 import os
-import cv2
-import PIL
 from PIL import Image
+from numpy.core._asarray import asarray
 
 # Read file
 #def read_all_images(folder, ext):
@@ -38,7 +37,6 @@ num1 = 0
 num2 = 0
 for image in img_list_paper:
     try:
-        paper_images = []
         img = Image.open(os.path.join(training_path_paper, image))
         #img.show() for debug
         img.resize((300, 300))
@@ -46,14 +44,13 @@ for image in img_list_paper:
         rgb_img = img.convert('RGB')
         rgb_img.save(filename, "JPEG", optimize=False)
         num += 1
-        paper_images.append(rgb_img)
-        #print(paper_images)
+        data = asarray(rgb_img)
+        print(data)
     except Exception as e:
         break
 #print(paper_images)
 for image in img_list_rock:
     try:        
-        rock_images = []
         img = Image.open(os.path.join(training_path_rock, image))
         #img.show() for debug
         img.resize((300, 300))
@@ -61,13 +58,13 @@ for image in img_list_rock:
         rgb_img = img.convert('RGB')
         rgb_img.save(filename, "JPEG", optimize=False)
         num1 += 1
-        rock_images.append(rgb_img)
+        data = asarray(rgb_img)
+        print(data)
     except Exception as e:
         break
     
 for image in img_list_scissors:
     try:
-        scissor_images = []
         img = Image.open(os.path.join(training_path_scissors, image))
         #img.show() for debug
         img.resize((300, 300))
@@ -75,7 +72,8 @@ for image in img_list_scissors:
         rgb_img = img.convert('RGB')
         rgb_img.save(filename, "JPEG", optimize=False)
         num2 += 1
-        scissor_images.append(rgb_img)
+        data = asarray(rgb_img)
+        print(data)
     except Exception as e:
         break
 
