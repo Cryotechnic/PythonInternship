@@ -1,6 +1,6 @@
 # Importing libraries
 #import tensorflow as tf
-#import keras as kr
+import keras as kr
 #import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt 
@@ -35,6 +35,8 @@ scale_percent = 60
 num = 0
 num1 = 0
 num2 = 0
+img_width = 300
+img_height = 300
 for image in img_list_paper:
     try:
         img = Image.open(os.path.join(training_path_paper, image))
@@ -77,4 +79,10 @@ for image in img_list_scissors:
     except Exception as e:
         break
 
+# Checking image format before sending to model
+# https://ai-pool.com/d/what-is-channels_first-in-keras-
 
+if kr.image_data_format() == 'channels_first':
+    input_shape = (3, img_width, img_height)
+else:
+    input_shape = (img_width, img_height, 3)
