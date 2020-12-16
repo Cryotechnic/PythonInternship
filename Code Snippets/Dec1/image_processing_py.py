@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
 import cv2
+import PIL
+from PIL import Image
 
 # Read file
 #def read_all_images(folder, ext):
@@ -36,39 +38,51 @@ num1 = 0
 num2 = 0
 for image in img_list_paper:
     try:
-        img = cv2.imread(os.path.join(training_path_paper, image))
-        print("Resizing")
-        img_res = cv2.resize(img, (300, 300))
+        paper_images = []
+        img = Image.open(os.path.join(training_path_paper, image))
+        #img.show() for debug
+        img.resize((300, 300))
         filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\paper\\paper-12-01{0}.jpg'.format(num)
-        cv2.imwrite(filename, img)
+        rgb_img = img.convert('RGB')
+        rgb_img.save(filename, "JPEG", optimize=False)
         num += 1
-        print(filename)
+        paper_images.append(rgb_img)
+        #print(paper_images)
     except Exception as e:
         break
+#print(paper_images)
 for image in img_list_rock:
-    try:
-        img = cv2.imread(os.path.join(training_path_rock, image))
-        print("Resizing")
-        img_res = cv2.resize(img, (300, 300))
-        filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\rock\\rock-12-01{0}.jpg'.format(num)
-        cv2.imwrite(filename, img)
-        num += 1
-        print(filename)
-    except Exception as e:
-        break
-for image in img_list_scissors:
-    try:
-        img = cv2.imread(os.path.join(training_path_scissors, image))
-        print("Resizing")
-        img_res = cv2.resize(img, (300, 300))
-        filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\scissors\\scissors-12-01{0}.jpg'.format(num)
-        cv2.imwrite(filename, img)
-        num += 1
-        print(filename)
+    try:        
+        rock_images = []
+        img = Image.open(os.path.join(training_path_rock, image))
+        #img.show() for debug
+        img.resize((300, 300))
+        filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\rock\\rock-12-01{0}.jpg'.format(num1)
+        rgb_img = img.convert('RGB')
+        rgb_img.save(filename, "JPEG", optimize=False)
+        num1 += 1
+        rock_images.append(rgb_img)
     except Exception as e:
         break
     
+for image in img_list_scissors:
+    try:
+        scissor_images = []
+        img = Image.open(os.path.join(training_path_scissors, image))
+        #img.show() for debug
+        img.resize((300, 300))
+        filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\scissors\\scissors-12-01{0}.jpg'.format(num2)
+        rgb_img = img.convert('RGB')
+        rgb_img.save(filename, "JPEG", optimize=False)
+        num2 += 1
+        scissor_images.append(rgb_img)
+    except Exception as e:
+        break
+
+
+
 # Lists all files of .jpg extension
+#print(img_list_rock)
 # jpg_files_rock = read_all_images(training_path_rock, 'jpg')
 # jpg_files_paper = read_all_images(training_path_paper, 'jpg')
 # jpg_files_scissors = read_all_images(training_path_scissors, 'jpg')
