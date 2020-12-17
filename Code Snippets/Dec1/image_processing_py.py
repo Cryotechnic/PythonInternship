@@ -1,5 +1,4 @@
 # Importing libraries
-#import tensorflow as tf
 import keras as kr
 #import pandas as pd
 import numpy as np
@@ -8,6 +7,10 @@ import matplotlib.image as mpimg
 import os
 from PIL import Image, ImageOps
 from numpy.core._asarray import asarray
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers.core import Dense
+import tensorflow as tf
+from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
 # Read file
 #def read_all_images(folder, ext):
@@ -79,6 +82,26 @@ for image in img_list_scissors:
     except Exception as e:
         break
 
+# Creating training Image data
+TRAINING_DIR = "/train/"
+training_datagen = ImageDataGenerator(rescale = 1./255)
+
+train_generator = training_datagen.flow_from_directory(
+    TRAINING_DIR,
+    target_size=(300,300),
+    class_mode='categorical'
+)
+
+# Creating validation Image data
+VALIDATION_DIR = "/val/"
+validation_datagen = ImageDataGenerator(rescale = 1./255)
+
+validation_generator = validation_datagen.flow_from_directory(
+    VALIDATION_DIR,
+    target_size(300,300),
+    class_mode='categorical'
+)
+
 # Checking image format before sending to model
 # https://ai-pool.com/d/what-is-channels_first-in-keras-
 
@@ -86,3 +109,32 @@ for image in img_list_scissors:
 #    input_shape = (3, img_width, img_height)
 #else:
 #    input_shape = (img_width, img_height, 3)
+
+# Define Keras model
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu', input_shape=(300,300,3)),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPool2D(2,2),
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+    tf.keras.layers.MaxPool2D(2,2),
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+    tf.keras.layers.MaxPool2D(2,2),
+
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dropout(0.5),
+
+    tf.keras.layers.Dense(512, activation='relu'),
+    tf.keras.layers.Dense(3, activation='relu'),
+])
+
+# Compiling DNN
+
+model.compile(loss = 'categorical_crossentropy',
+        optimizer='rmsprop',
+        metrics=['accuracy'])
+
+# Fitting DNN
+
+fitting = model.fit_generator(train_generator, epochs=25, 
+        validation_data = validation_generator, verbose = 1)
