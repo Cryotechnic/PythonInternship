@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import matplotlib.image as mpimg
 import os
-from PIL import Image
+from PIL import Image, ImageOps
 from numpy.core._asarray import asarray
 
 # Read file
@@ -43,10 +43,10 @@ for image in img_list_paper:
         #img.show() for debug
         img.resize((300, 300))
         filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\paper\\paper-12-01{0}.jpg'.format(num)
-        rgb_img = img.convert('RGB')
-        rgb_img.save(filename, "JPEG", optimize=False)
+        gs_img = ImageOps.grayscale(img)
+        gs_img.save(filename, "JPEG", optimize=False)
         num += 1
-        data = asarray(rgb_img)
+        data = asarray(gs_img)
         print(data)
     except Exception as e:
         break
@@ -57,10 +57,10 @@ for image in img_list_rock:
         #img.show() for debug
         img.resize((300, 300))
         filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\rock\\rock-12-01{0}.jpg'.format(num1)
-        rgb_img = img.convert('RGB')
-        rgb_img.save(filename, "JPEG", optimize=False)
+        gs_img = ImageOps.grayscale(img)
+        gs_img.save(filename, "JPEG", optimize=False)
         num1 += 1
-        data = asarray(rgb_img)
+        data = asarray(gs_img)
         print(data)
     except Exception as e:
         break
@@ -71,10 +71,10 @@ for image in img_list_scissors:
         #img.show() for debug
         img.resize((300, 300))
         filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\scissors\\scissors-12-01{0}.jpg'.format(num2)
-        rgb_img = img.convert('RGB')
-        rgb_img.save(filename, "JPEG", optimize=False)
+        gs_img = ImageOps.grayscale(img)
+        gs_img.save(filename, "JPEG", optimize=False)
         num2 += 1
-        data = asarray(rgb_img)
+        data = asarray(gs_img)
         print(data)
     except Exception as e:
         break
@@ -82,7 +82,7 @@ for image in img_list_scissors:
 # Checking image format before sending to model
 # https://ai-pool.com/d/what-is-channels_first-in-keras-
 
-if kr.image_data_format() == 'channels_first':
-    input_shape = (3, img_width, img_height)
-else:
-    input_shape = (img_width, img_height, 3)
+#if kr.image_data_format() == 'channels_first':
+#    input_shape = (3, img_width, img_height)
+#else:
+#    input_shape = (img_width, img_height, 3)
