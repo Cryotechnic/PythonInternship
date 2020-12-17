@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageOps
 import os
 from numpy.core._asarray import asarray
 #image = Image.open("D:\\GitHub Repos\\PythonInternship\\Code Snippets\Dec1\\rps\\rps\\resized\\scissors\\scissors-12-011680.jpg")
@@ -30,10 +30,11 @@ for image in img_list_rock:
         #img.show() for debug
         img.resize((300, 300))
         filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\rock\\rock-12-01{0}.jpg'.format(num_num)
-        rgb_img = img.convert('RGB')
-        rgb_img.save(filename, "JPEG", optimize=False)
+        gs_img = ImageOps.grayscale(img)  
+        #img.convert('RGB')
+        gs_img.save(filename, "JPEG", optimize=False)
         num_num += 1
-        data = asarray(rgb_img)
+        data = asarray(gs_img)
         print(type(data))
         print(data.shape)
         print(data)
