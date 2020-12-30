@@ -11,6 +11,7 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers.core import Dense
 import tensorflow as tf
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
+import traceback
 
 # Read file
 #def read_all_images(folder, ext):
@@ -35,72 +36,121 @@ img_list_paper = os.listdir(training_path_paper)
 img_list_scissors = os.listdir(training_path_scissors)
 scale_percent = 60
 
-num = 0
-num1 = 0
-num2 = 0
+
 img_width = 300
 img_height = 300
-for image in img_list_paper:
+
+data = []
+num = 0
+for image in img_list_scissors:
     try:
-        img = Image.open(os.path.join(training_path_paper, image))
-        #img.show() for debug
+        img = Image.open(os.path.join(training_path_scissors, image))
+        #img.show() # for debug
         img.resize((300, 300))
         filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\paper\\paper-12-01{0}.jpg'.format(num)
         gs_img = ImageOps.grayscale(img)
         gs_img.save(filename, "JPEG", optimize=False)
-        num += 1
-        data = asarray(gs_img)
-        print(data)
+        #gs_img.show() # for debug
+        #data = asarray(gs_img)
+        data.insert(num, 255 - asarray(gs_img))
+        #print(gs_img.shape) # for debug
+        num = num + 1
+        #print(data) # for debug
     except Exception as e:
-        break
+        traceback.print_exc()
+        
 #print(paper_images)
 for image in img_list_rock:
-    try:        
+    try:      
+        #num1 = 0  
         img = Image.open(os.path.join(training_path_rock, image))
         #img.show() for debug
         img.resize((300, 300))
-        filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\rock\\rock-12-01{0}.jpg'.format(num1)
+        filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\rock\\rock-12-01{0}.jpg'.format(num)
         gs_img = ImageOps.grayscale(img)
         gs_img.save(filename, "JPEG", optimize=False)
-        num1 += 1
-        data = asarray(gs_img)
-        print(data)
+        #data = asarray(gs_img)
+        data.insert(num, 255 - asarray(gs_img))
+        num = num + 1
+        #print(data)
     except Exception as e:
-        break
+        traceback.print_exc()
     
-for image in img_list_scissors:
+for image in img_list_paper:
     try:
-        img = Image.open(os.path.join(training_path_scissors, image))
+        #num2 = 0
+        img = Image.open(os.path.join(training_path_paper, image))
         #img.show() for debug
         img.resize((300, 300))
-        filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\scissors\\scissors-12-01{0}.jpg'.format(num2)
+        filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\scissors\\scissors-12-01{0}.jpg'.format(num)
         gs_img = ImageOps.grayscale(img)
         gs_img.save(filename, "JPEG", optimize=False)
-        num2 += 1
-        data = asarray(gs_img)
-        print(data)
+        #data = asarray(gs_img)
+        data.insert(num, 255 - asarray(gs_img))
+        num = num + 1
+        #print(data)
     except Exception as e:
-        break
+        traceback.print_exc()
+
+#print(len(data)) # for debug 
 
 # Creating training Image data
-TRAINING_DIR = "/train/"
-training_datagen = ImageDataGenerator(rescale = 1./255)
 
-train_generator = training_datagen.flow_from_directory(
-    TRAINING_DIR,
-    target_size=(300,300),
-    class_mode='categorical'
-)
+def splitTrainTest ( data, n, s, r, p ):
+# data is a list of images. n is the number of images and labels in the training set.
+    total=len(data)
+    train_images = []
+    train_labels = []
+    test_images = []
+    test_labels = []
+    # set the training set
+    # user wants n pictures in training set out of len(data).
+    # Scissors start at 0
+    # Rocks start at s
+    # Papers start at s + r
+    num_in_testing = total - n
+    num_in_paper_test = int(num_in_testing/3)
+    num_in_rock_test = num_in_paper_test
+    num_in_scissors_test = num_in_testing - 2 * num_in_paper_test 
+    step = (s // num_in_scissors_test)
+    print(step)
+    j=0
+    for i in range(0,s):
+      if ((i%step) == 0 and (j<num_in_scissors_test)):
+        test_images.append(data[i])
+        test_labels.append(2)
+        j=j+1
+      else: 
+        train_images.append(data[i])
+        train_labels.append(2)
+    j=0
+    for i in range(s,r+s):
+      if ((i%step) == 0 and (j<num_in_rock_test)):
+        test_images.append(data[i])
+        test_labels.append(0)
+        j=j+1
+      else: 
+        train_images.append(data[i])
+        train_labels.append(0)
+    j=0
+    for i in range(s+r, total):
+      if ((i%step) == 0 and j<num_in_paper_test):
+        test_images.append(data[i])
+        test_labels.append(1)
+        j=j+1
+      else: 
+        train_images.append(data[i])
+        train_labels.append(1)
+    print(str(num_in_paper_test) + " " + str(num_in_rock_test) + " " + str(num_in_scissors_test) + " ")
+    return ( train_images, train_labels, test_images, test_labels ) 
 
-# Creating validation Image data
-VALIDATION_DIR = "/val/"
-validation_datagen = ImageDataGenerator(rescale = 1./255)
 
-validation_generator = validation_datagen.flow_from_directory(
-    VALIDATION_DIR,
-    target_size(300,300),
-    class_mode='categorical'
-)
+print (data[10])
+print(data[10].shape)
+print (len(data))
+(train_images,train_labels,test_images,test_labels) = splitTrainTest(data, 1200, 840, 840, 840)
+print (len(train_images))
+print (len(test_images))
 
 # Checking image format before sending to model
 # https://ai-pool.com/d/what-is-channels_first-in-keras-
@@ -111,30 +161,30 @@ validation_generator = validation_datagen.flow_from_directory(
 #    input_shape = (img_width, img_height, 3)
 
 # Define Keras model
-model = tf.keras.models.Sequential([
-    tf.keras.layers.Conv2D(64, (3,3), activation='relu', input_shape=(300,300,3)),
-    tf.keras.layers.MaxPooling2D(2,2),
-    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
-    tf.keras.layers.MaxPool2D(2,2),
-    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
-    tf.keras.layers.MaxPool2D(2,2),
-    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
-    tf.keras.layers.MaxPool2D(2,2),
-
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dropout(0.5),
-
-    tf.keras.layers.Dense(512, activation='relu'),
-    tf.keras.layers.Dense(3, activation='relu'),
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(300, 300)),
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dense(3)
 ])
 
 # Compiling DNN
+#
+#model.compile(loss = 'categorical_crossentropy',
+#        optimizer='rmsprop',
+#        metrics=['accuracy'])
+#
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
 
-model.compile(loss = 'categorical_crossentropy',
-        optimizer='rmsprop',
-        metrics=['accuracy'])
+# Print arrays containing training & testing sets + length
+train_img = np.asarray(train_images)
+train_lab = np.asarray(train_labels)
+test_img = np.asarray(test_images)
+test_lab = np.asarray(test_labels)
+
+print(len(train_img))
+print(len(train_lab))
 
 # Fitting DNN
-
-fitting = model.fit_generator(train_generator, epochs=25, 
-        validation_data = validation_generator, verbose = 1)
+model.fit(train_img, train_lab, epochs=7)
