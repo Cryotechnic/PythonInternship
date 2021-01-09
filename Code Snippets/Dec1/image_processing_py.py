@@ -138,47 +138,36 @@ print (len(data))
 print (len(train_images))
 print (len(test_images))
 
-# Checking image format before sending to model
-# https://ai-pool.com/d/what-is-channels_first-in-keras-
 
-#if kr.image_data_format() == 'channels_first':
-#    input_shape = (3, img_width, img_height)
-#else:
-#    input_shape = (img_width, img_height, 3)
+def kerasModel():      
+  # Define Keras model
+  model = tf.keras.Sequential([
+      tf.keras.layers.Flatten(input_shape=(300, 300)),
+      tf.keras.layers.Dense(256, activation='relu'),
+      tf.keras.layers.Dense(3)
+  ])
 
-# Define Keras model
-model = tf.keras.Sequential([
-    tf.keras.layers.Flatten(input_shape=(300, 300)),
-    tf.keras.layers.Dense(256, activation='relu'),
-    tf.keras.layers.Dense(3)
-])
+  # Compiling DNN
+  model.compile(optimizer='adam',
+                loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                metrics=['accuracy'])
 
-# Compiling DNN
-#
-#model.compile(loss = 'categorical_crossentropy',
-#        optimizer='rmsprop',
-#        metrics=['accuracy'])
-#
-model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=['accuracy'])
+  # Print arrays containing training & testing sets + length
+  train_img = np.asarray(train_images)
+  train_lab = np.asarray(train_labels)
+  test_img = np.asarray(test_images)
+  test_lab = np.asarray(test_labels)
 
-# Print arrays containing training & testing sets + length
-train_img = np.asarray(train_images)
-train_lab = np.asarray(train_labels)
-test_img = np.asarray(test_images)
-test_lab = np.asarray(test_labels)
+  print(len(train_img))
+  print(len(train_lab))
 
-print(len(train_img))
-print(len(train_lab))
+  # Fitting DNN
+  model.fit(train_img, train_lab, epochs=7)
 
-# Fitting DNN
-model.fit(train_img, train_lab, epochs=7)
-
-# Testing DNN model for loss and accuracy
-test_loss, test_acc = model.evaluate(test_img,  test_lab, verbose=2)
-print(len(test_lab))
-print('\nTest accuracy:', test_acc)
+  # Testing DNN model for loss and accuracy
+  test_loss, test_acc = model.evaluate(test_img,  test_lab, verbose=2)
+  print(len(test_lab))
+  print('\nTest accuracy:', test_acc)
 
 def guiElem():
     ui.ChangeLookAndFeel('Dark')
@@ -231,3 +220,4 @@ def guiElem():
         wd.FindElement('image').Update(data=imgbytes) # Update Window element with new image
 
 guiElem()
+kerasModel()
