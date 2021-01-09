@@ -2,30 +2,20 @@
 import keras as kr
 #import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt 
-import matplotlib.image as mpimg
+import PySimpleGUI as ui
+import cv2 as cv
+import sys
+import io
 import os
 from PIL import Image, ImageOps
+import matplotlib.pyplot as plt 
+import matplotlib.image as mpimg
 from numpy.core._asarray import asarray
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers.core import Dense
 import tensorflow as tf
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 import traceback
-
-# Read file
-#def read_all_images(folder, ext):
-#    all_files = []
-#    # Iteration
-#    for file in os.listdir(folder):
-#        # Get file extension
-#        file_ext = os.path.splitext(file)
-#        # If file is of specified extension, get full path and append to list
-#        if ext in file_ext: 
-#            full_file_path = os.path.join(folder, file)
-#            all_files.append(full_file_path)
-#    return all_files
-
 
 training_path_paper = "D:/GitHub Repos/PythonInternship/Code Snippets/Dec1/rps/rps/paper" 
 training_path_rock = "D:/GitHub Repos/PythonInternship/Code Snippets/Dec1/rps/rps/rock" 
@@ -34,14 +24,10 @@ training_path_scissors = "D:/GitHub Repos/PythonInternship/Code Snippets/Dec1/rp
 img_list_rock = os.listdir(training_path_rock)
 img_list_paper = os.listdir(training_path_paper)
 img_list_scissors = os.listdir(training_path_scissors)
-scale_percent = 60
-
-
-img_width = 300
-img_height = 300
 
 data = []
 num = 0
+
 for image in img_list_scissors:
     try:
         img = Image.open(os.path.join(training_path_scissors, image))
@@ -193,3 +179,55 @@ model.fit(train_img, train_lab, epochs=7)
 test_loss, test_acc = model.evaluate(test_img,  test_lab, verbose=2)
 print(len(test_lab))
 print('\nTest accuracy:', test_acc)
+
+def guiElem():
+    ui.ChangeLookAndFeel('Dark')
+
+    # Defining window layout
+    layout = [[ui.Text('RPS with DNN - v.0.0.1B (Pre-release)', size=(40,1), justification='center',
+    font='Roboto 18')],
+    [ui.Image(filename='', key='image')],
+    [ui.ReadButton('Exit', size=(10,1), pad=((200, 0), 3), font='Roboto 18'),
+    ui.RButton('Submit', size=(10,1), font='Roboto 18'),
+    ui.RButton('About', size=(10,1), font='Any 18')]]
+
+    # Create window & display without plotting
+    wd = ui.Window('RPS Demo - Keras & Tensorflow Compute', location=(800,400))
+    wd.Layout(layout).Finalize()
+
+    # Loops:
+    # This will iterate every millisecond to display webcam frame and update the GUI
+    # to reflect such changes.
+    #
+    # This should also not crash when no camera is detected/is being used by another process (WIP)
+
+    vCap = cv.VideoCapture(0)
+    while True:
+        button, values = wd._ReadNonBlocking()
+
+        if button is 'Exit' or values is None:
+            sys.exit(0)
+        elif button == 'About':
+            ui.PopupNoWait("Hey! You've stumbled across my Rock, Paper & Scissor game using Tensorflow!",
+            "This was made in collaboration with Vanier College's Julie Plante {DESC HERE}, as well as the Quebec Government's MITACS fund.",
+            "Authors: Ron Friedman (GUI & Backend), Julie Plante (Research & Guidance)",
+            "Made For: Vanier College, © Ron Friedman 2021. All rights reserved.",
+            keep_on_top=True)
+        elif button == 'Submit':
+          # placeholder for file-saving feature
+            filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\scissors-12-01{0}.jpg'.format(num)
+
+        
+        ret, frame = vCap.read() # read vCap device (webcam)
+
+        # "filter", converts to grayscale
+        gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+        # Converting to PIL image for processing
+        img = Image.fromarray(gray) # PIL from frame
+        bio = io.BytesIO() # Allocates space in memory for data stream. Required for updating image
+        img.save(bio, format='PNG') # Saves image to png
+        imgbytes = bio.getvalue() # Placeholder to use in openCV
+        wd.FindElement('image').Update(data=imgbytes) # Update Window element with new image
+
+guiElem()
