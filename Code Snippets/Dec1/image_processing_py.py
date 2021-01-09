@@ -191,23 +191,29 @@ def guiElem():
     # This should also not crash when no camera is detected/is being used by another process (WIP)
 
     vCap = cv.VideoCapture(0)
+    counter = 0
     while True:
         button, values = wd._ReadNonBlocking()
+        ret, frame = vCap.read() # read vCap device (webcam)
 
         if button is 'Exit' or values is None:
+            vCap.release() # destroys vCam device in memory
             sys.exit(0)
+
         elif button == 'About':
             ui.PopupNoWait("Hey! You've stumbled across my Rock, Paper & Scissor game using Tensorflow!",
             "This was made in collaboration with Vanier College's Julie Plante {DESC HERE}, as well as the Quebec Government's MITACS fund.",
             "Authors: Ron Friedman (GUI & Backend), Julie Plante (Research & Guidance)",
             "Made For: Vanier College, © Ron Friedman 2021. All rights reserved.",
             keep_on_top=True)
+
         elif button == 'Submit':
           # placeholder for file-saving feature
-            filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\resized\\scissors-12-01{0}.jpg'.format(num)
-
-        
-        ret, frame = vCap.read() # read vCap device (webcam)
+            filename = 'D:\\GitHub Repos\\PythonInternship\\Code Snippets\\Dec1\\rps\\rps\\cap\\vCap{0}.jpg'.format(counter)
+            convert = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+            cv.imwrite(filename, convert)
+            counter = counter + 1
+            print("Written at" + filename)
 
         # "filter", converts to grayscale
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -220,4 +226,3 @@ def guiElem():
         wd.FindElement('image').Update(data=imgbytes) # Update Window element with new image
 
 guiElem()
-kerasModel()
