@@ -148,7 +148,7 @@ def splitTrainTest ( data, n, s, r, p ):
 print (data[10])
 print(data[10].shape)
 print (len(data))
-(train_images,train_labels,test_images,test_labels) = splitTrainTest(data, 1200, 840, 840, 840)
+(train_images,train_labels,test_images,test_labels) = splitTrainTest(data, 2000, 840, 840, 840)
 print (len(train_images))
 print (len(test_images))
 
@@ -174,7 +174,7 @@ model = tf.keras.Sequential([
 #        metrics=['accuracy'])
 #
 model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
 # Print arrays containing training & testing sets + length
@@ -188,3 +188,8 @@ print(len(train_lab))
 
 # Fitting DNN
 model.fit(train_img, train_lab, epochs=7)
+
+# Testing DNN model for loss and accuracy
+test_loss, test_acc = model.evaluate(test_img,  test_lab, verbose=2)
+print(len(test_lab))
+print('\nTest accuracy:', test_acc)
