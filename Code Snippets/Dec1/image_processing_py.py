@@ -154,7 +154,7 @@ def guiElem():
     ui.ChangeLookAndFeel('Dark')
 
     # Defining window layout
-    layout = [[ui.Text('RPS with DNN - v.1.0.1A (RC1)', size=(40,1), justification='center',
+    layout = [[ui.Text('RPS with DNN - v.1.0.2A (RC3)', size=(40,1), justification='center',
     font='Roboto 18')],
     [ui.Image(filename='', key='image')],
     [ui.ReadButton('Exit', size=(10,1), pad=((200, 0), 3), font='Roboto 18'),
@@ -219,12 +219,10 @@ def guiElem():
             print("player1 played : "+WhatIsIt(player1))
             print("player2 played : "+WhatIsIt(player2))
             if (winner == 0):
-              cv.destroyWindow()
-              ui.PopupNoWait("User played " + WhatIsIt(player1) + ", while AI played " + WhatIsIt(player2) + "and it was a draw", keep_on_top=True)
+              ui.PopupNoWait("User played " + WhatIsIt(player1) + ", while AI played " + WhatIsIt(player2) + " and it was a draw", title="Results", keep_on_top=True)
               print("oh... it is a draw!")
             else:
-              cv.destroyWindow()
-              ui.PopupNoWait("User played " + str(WhatIsIt(player1)) + ", while AI played " + str(WhatIsIt(player2)) + "and the winner was player" + str(winner) + "! Congrats to player " + str(winner), keep_on_top=True)
+              ui.PopupNoWait("User played " + str(WhatIsIt(player1)) + ", while AI played " + str(WhatIsIt(player2)) + " and the winner was player" + str(winner) + "! Congrats to player " + str(winner) + " !", title="Results", keep_on_top=True)
               print("The Winner is player" + str(winner))
 
             print("Written at" + str(result))
